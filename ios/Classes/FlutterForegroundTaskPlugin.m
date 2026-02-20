@@ -15,4 +15,7 @@
 + (void)setPluginRegistrantCallback:(FlutterPluginRegistrantCallback)callback {
   [SwiftFlutterForegroundTaskPlugin setPluginRegistrantCallback:callback];
 }
++ (void)registerTask {
+  [SwiftFlutterForegroundTaskPlugin registerTask];
+}
 @end

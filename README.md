@@ -41,8 +41,8 @@ This plugin requires `Kotlin version 1.9.10+` and `Gradle version 8.6.0+`. Pleas
 - [app/build.gradle](https://github.com/Dev-hwang/flutter_foreground_task/blob/master/example/android/app/build.gradle)
 - [migration_documentation](https://github.com/Dev-hwang/flutter_foreground_task/blob/master/documentation/migration_documentation.md)
 
-Open the `AndroidManifest.xml` file and declare the service tag inside the `<application>` tag as follows. 
-If you want the foreground service to run only when the app is running, add `android:stopWithTask="true"`. 
+Open the `AndroidManifest.xml` file and declare the service tag inside the `<application>` tag as follows.
+If you want the foreground service to run only when the app is running, add `android:stopWithTask="true"`.
 As mentioned in the Android guidelines, to start a FG service on Android 14+, you must declare `android:foregroundServiceType`.
 
 * [`camera`](https://developer.android.com/about/versions/14/changes/fgs-types-required#camera)
@@ -70,7 +70,7 @@ As mentioned in the Android guidelines, to start a FG service on Android 14+, yo
 <uses-permission android:name="android.permission.FOREGROUND_SERVICE_REMOTE_MESSAGING" />
 
 <!-- Warning: Do not change service name. -->
-<service 
+<service
     android:name="com.pravera.flutter_foreground_task.service.ForegroundService"
     android:foregroundServiceType="dataSync|remoteMessaging"
     android:exported="false" />
@@ -86,12 +86,13 @@ As mentioned in the Android guidelines, to start a FG service on Android 14+, yo
 >
 > There are new restrictions on `BOOT_COMPLETED(autoRunOnBoot)` broadcast receivers launching foreground services.
 > `BOOT_COMPLETED` receivers are not allowed to launch the following types of foreground services:
+>
 > - [dataSync](https://developer.android.com/develop/background-work/services/fg-service-types#data-sync)
 > - [camera](https://developer.android.com/develop/background-work/services/fg-service-types#camera)
 > - [mediaPlayback](https://developer.android.com/develop/background-work/services/fg-service-types#media)
 > - [phoneCall](https://developer.android.com/develop/background-work/services/fg-service-types#phone-call)
 > - [microphone](https://developer.android.com/about/versions/14/changes/fgs-types-required#microphone)
-> 
+>
 > You can find how to test this behavior and more details at this [link](https://developer.android.com/about/versions/15/behavior-changes-15#fgs-hardening).
 
 ### :baby_chick: iOS
@@ -143,7 +144,11 @@ void registerPlugins(NSObject<FlutterPluginRegistry>* registry) {
   [GeneratedPluginRegistrant registerWithRegistry:self];
 
   // this
+  [FlutterForegroundTaskPlugin registerTask];
+
+  // this
   [FlutterForegroundTaskPlugin setPluginRegistrantCallback:registerPlugins];
+
   if (@available(iOS 10.0, *)) {
     [UNUserNotificationCenter currentNotificationCenter].delegate = (id<UNUserNotificationCenterDelegate>) self;
   }
@@ -177,9 +182,13 @@ import Flutter
     GeneratedPluginRegistrant.register(with: self)
 
     // this
+    SwiftFlutterForegroundTaskPlugin.registerTask()
+
+    // this
     SwiftFlutterForegroundTaskPlugin.setPluginRegistrantCallback { registry in
       GeneratedPluginRegistrant.register(with: registry)
     }
+
     if #available(iOS 10.0, *) {
       UNUserNotificationCenter.current().delegate = self as? UNUserNotificationCenterDelegate
     }
@@ -318,7 +327,7 @@ Future<void> _requestPermissions() async {
     // This utility requires the "android.permission.SCHEDULE_EXACT_ALARM" permission.
     // Using this permission may make app distribution difficult due to Google policy.
     if (!await FlutterForegroundTask.canScheduleExactAlarms) {
-      // When you call this function, will be gone to the settings page. 
+      // When you call this function, will be gone to the settings page.
       // So you need to explain to the user why set it.
       await FlutterForegroundTask.openAlarmsAndRemindersSettings();
     }
@@ -429,7 +438,7 @@ class FirstTaskHandler extends TaskHandler {
   @override
   void onRepeatEvent(DateTime timestamp) {
     _count++;
-    
+
     if (_count == 10) {
       FlutterForegroundTask.updateService(
         foregroundTaskOptions: defaultTaskOptions.copyWith(
@@ -439,7 +448,7 @@ class FirstTaskHandler extends TaskHandler {
       );
       return;
     }
-    
+
     FlutterForegroundTask.updateService(
       notificationTitle: 'Hello FirstTaskHandler :)',
       notificationText: timestamp.toString(),
@@ -589,18 +598,23 @@ class MyTaskHandler extends TaskHandler {
 ### :hatched_chick: other example
 
 #### [`internal_plugin_service`](https://github.com/Dev-hwang/flutter_foreground_task_example/tree/main/internal_plugin_service)
+
 An example of using the platform channel in project with `flutter_foreground_task`.
 
 #### [`location_service`](https://github.com/Dev-hwang/flutter_foreground_task_example/tree/main/location_service)
+
 An example of a background location service implementation using `flutter_foreground_task` and `fl_location`.
 
 #### [`record_service`](https://github.com/Dev-hwang/flutter_foreground_task_example/tree/main/record_service)
+
 An example of a voice record service implementation using `flutter_foreground_task` and `record`.
 
 #### [`geofencing_service`](https://github.com/Dev-hwang/flutter_foreground_task_example/tree/main/geofencing_service)
+
 An example of a background geofencing service implementation using `flutter_foreground_task` and `geofencing_api`.
 
 #### [`pedometer_service`](https://github.com/Dev-hwang/flutter_foreground_task_example/tree/main/pedometer_service)
+
 An example of a pedometer service implementation using `flutter_foreground_task` and `pedometer`.
 
 ## More Documentation

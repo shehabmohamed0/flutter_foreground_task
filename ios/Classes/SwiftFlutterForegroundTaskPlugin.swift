@@ -18,7 +18,7 @@ public class SwiftFlutterForegroundTaskPlugin: NSObject, FlutterPlugin {
     registrar.addApplicationDelegate(instance)
   }
   
-  public static func setPluginRegistrantCallback(_ callback: @escaping FlutterPluginRegistrantCallback) {
+  @objc public static func setPluginRegistrantCallback(_ callback: @escaping FlutterPluginRegistrantCallback) {
     registerPlugins = callback
   }
   
@@ -28,6 +28,13 @@ public class SwiftFlutterForegroundTaskPlugin: NSObject, FlutterPlugin {
   
   public static func removeTaskLifecycleListener(_ listener: FlutterForegroundTaskLifecycleListener) {
     BackgroundService.sharedInstance.removeTaskLifecycleListener(listener)
+  }
+
+  @objc public static func registerTask() {
+    UIApplication.shared.setMinimumBackgroundFetchInterval(UIApplication.backgroundFetchIntervalMinimum)
+    if #available(iOS 13.0, *) {
+      SwiftFlutterForegroundTaskPlugin.registerAppRefresh()
+    }
   }
   
   private func initServices() {
@@ -85,10 +92,6 @@ public class SwiftFlutterForegroundTaskPlugin: NSObject, FlutterPlugin {
   
   // ================== App Lifecycle ===================
   public func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [AnyHashable : Any] = [:]) -> Bool {
-    UIApplication.shared.setMinimumBackgroundFetchInterval(UIApplication.backgroundFetchIntervalMinimum)
-    if #available(iOS 13.0, *) {
-      SwiftFlutterForegroundTaskPlugin.registerAppRefresh()
-    }
     return true
   }
   
